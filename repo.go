@@ -72,7 +72,7 @@ func QueryActivities(query Query) []UserChange {
 func composeCondition(query Query) bson.M {
 	var filter []bson.M
 	if len(query.UserId) > 0 {
-		filter = append(filter, bson.M{"userid": query.UserId})
+		filter = append(filter, bson.M{"userId": query.UserId})
 	}
 	if len(query.Value) > 0 {
 		filter = append(filter, bson.M{"field": query.Value})
