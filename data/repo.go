@@ -4,12 +4,13 @@ import (
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 	"log"
+	"github.com/tsongpon/listener/config"
 )
 
 const DBNAME = "redPlanet"
 const COLLECTIONNAME = "userActivities"
 
-var dbHost = GetDBHost()
+var dbHost = config.GetDBHost()
 
 func Save(change UserChange) {
 	log.Println("Saving user change data")
