@@ -7,11 +7,11 @@ RUN apk --update add --no-cache git
 ADD . /go/src/listener
 WORKDIR /go/src/listener
 
-#ENV REDPLANET_DB_HOST localhost
-#ENV TOKEN some_token
 # Build the outyet command inside the container.
 # (You may fetch or manage dependencies here,
 # either manually or with a tool like "godep".)
+#RUN go install
+
 RUN go get listener
 
 # Run the command by default when the container starts.
