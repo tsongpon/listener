@@ -1,8 +1,11 @@
-package main
+package handler
 
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/tsongpon/listener/config"
+	"github.com/tsongpon/listener/data"
+	"github.com/tsongpon/listener/transport"
 	"html/template"
 	"io"
 	"io/ioutil"
@@ -14,7 +17,7 @@ import (
 
 func FacebookHookGet(w http.ResponseWriter, r *http.Request) {
 	token := r.FormValue("hub.verify_token")
-	if token == GetVerifyToken() {
+	if token == config.GetVerifyToken() {
 		io.WriteString(w, r.FormValue("hub.challenge"))
 	} else {
 		w.WriteHeader(400)
@@ -24,7 +27,7 @@ func FacebookHookGet(w http.ResponseWriter, r *http.Request) {
 
 func FacebookHookPost(w http.ResponseWriter, r *http.Request) {
 	log.Println("get facebook hook request")
-	var changeTransport Transport
+	var changeTransport transport.Transport
 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
 	if err != nil {
 		panic(err)
@@ -42,12 +45,12 @@ func FacebookHookPost(w http.ResponseWriter, r *http.Request) {
 	entry := changeTransport.Entry[0]
 	changes := entry.Change
 	for _, each := range changes {
-		var model = UserChange{}
+		var model = data.UserChange{}
 		model.UserId = entry.Uid
 		model.Time = time.Unix(entry.Time, 0)
 		model.Field = each.Field
 		model.Value = each.Value
-		Save(model)
+		data.Save(model)
 	}
 	w.WriteHeader(http.StatusOK)
 }
@@ -61,10 +64,10 @@ func QueryUserActivities(w http.ResponseWriter, r *http.Request) {
 		size = 5
 	}
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	activities := QueryActivities(Query{UserId: userId, Value: field, Size: size})
-	total := CountActivities(Query{UserId: userId, Value: field})
+	activities := data.QueryActivities(data.Query{UserId: userId, Value: field, Size: size})
+	total := data.CountActivities(data.Query{UserId: userId, Value: field})
 	w.WriteHeader(http.StatusOK)
-	response := UserActivities{total, len(activities), activities}
+	response := transport.UserActivities{total, len(activities), activities}
 	if err := json.NewEncoder(w).Encode(response); err != nil {
 		panic(err)
 	}

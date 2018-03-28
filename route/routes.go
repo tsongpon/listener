@@ -1,9 +1,10 @@
-package main
+package route
 
 import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/tsongpon/listener/handler"
 )
 
 type Route struct {
@@ -34,36 +35,36 @@ var routes = Routes{
 		"Facebookhook",
 		"GET",
 		"/facebookhook",
-		FacebookHookGet,
+		handler.FacebookHookGet,
 	},
 	Route{
 		"Facebookhook",
 		"POST",
 		"/facebookhook",
-		FacebookHookPost,
+		handler.FacebookHookPost,
 	},
 	Route{
 		"Useractivities",
 		"GET",
 		"/useractivities",
-		QueryUserActivities,
+		handler.QueryUserActivities,
 	},
 	Route{
 		"Index",
 		"GET",
 		"/",
-		Index,
+		handler.Index,
 	},
 	Route{
 		"Login",
 		"GET",
 		"/login",
-		Login,
+		handler.Login,
 	},
 	Route{
 		"Ping",
 		"GET",
 		"/ping",
-		Ping,
+		handler.Ping,
 	},
 }
