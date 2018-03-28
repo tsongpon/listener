@@ -62,7 +62,7 @@ func QueryActivities(query Query) []UserChange {
 	session.SetMode(mgo.Monotonic, true)
 	c := session.DB(DBNAME).C(COLLECTIONNAME)
 
-	err = c.Find(composeCondition(query)).Limit(query.Size).All(&result)
+	err = c.Find(composeCondition(query)).Skip(query.Start).Limit(query.Size).Sort("time").All(&result)
 
 	if err != nil {
 		panic(err)

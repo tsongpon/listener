@@ -59,12 +59,17 @@ func QueryUserActivities(w http.ResponseWriter, r *http.Request) {
 	userId := r.FormValue("userid")
 	field := r.FormValue("field")
 	sizeStr := r.FormValue("size")
+	startStr := r.FormValue("start")
 	size, err := strconv.Atoi(sizeStr)
 	if err != nil {
 		size = 5
 	}
+	start, err := strconv.Atoi(startStr)
+	if err != nil {
+		start = 0
+	}
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	activities := data.QueryActivities(data.Query{UserId: userId, Value: field, Size: size})
+	activities := data.QueryActivities(data.Query{UserId: userId, Value: field, Size: size, Start: start})
 	total := data.CountActivities(data.Query{UserId: userId, Value: field})
 	w.WriteHeader(http.StatusOK)
 	response := transport.UserActivities{total, len(activities), activities}
