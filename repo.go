@@ -6,23 +6,22 @@ import (
 	"log"
 )
 
-const dbName = "redPlanet"
-const collectionName = "userActivities"
+const DBNAME = "redPlanet"
+const COLLECTIONNAME = "userActivities"
 var dbHost = GetDBHost()
 
 func Save(change UserChange) {
 	log.Println("Saving user change data")
-	log.Println("Connecting to db host ", dbHost)
 	session, err := mgo.Dial(dbHost)
 	if err != nil {
 		panic(err)
 	}
 	defer session.Close()
 
-	// Optional. Switch the session to a monotonic behavior.
+	// Switch the session to a monotonic behavior.
 	session.SetMode(mgo.Monotonic, true)
 
-	c := session.DB(dbName).C(collectionName)
+	c := session.DB(DBNAME).C(COLLECTIONNAME)
 	err = c.Insert(&change)
 	if err != nil {
 		log.Fatal(err)
@@ -36,9 +35,9 @@ func CountActivities(query Query) int {
 	}
 	defer session.Close()
 
-	// Optional. Switch the session to a monotonic behavior.
+	// Switch the session to a monotonic behavior.
 	session.SetMode(mgo.Monotonic, true)
-	c := session.DB(dbName).C(collectionName)
+	c := session.DB(DBNAME).C(COLLECTIONNAME)
 
 	total, err := c.Find(composeCondition(query)).Count()
 
@@ -57,9 +56,9 @@ func QueryActivities(query Query) []UserChange {
 	}
 	defer session.Close()
 
-	// Optional. Switch the session to a monotonic behavior.
+	// Switch the session to a monotonic behavior.
 	session.SetMode(mgo.Monotonic, true)
-	c := session.DB(dbName).C(collectionName)
+	c := session.DB(DBNAME).C(COLLECTIONNAME)
 
 	err = c.Find(composeCondition(query)).Limit(query.Size).All(&result)
 

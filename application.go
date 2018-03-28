@@ -7,7 +7,7 @@ import (
 
 func main() {
 	log.Print("Starting application")
-	redPlanetRoute := NewRouter()
+	redPlanetRoute := RedPlanetRouter()
 	log.Print("The service is ready to listen and serve.")
 
 	log.Fatal(http.ListenAndServe(":5000", redPlanetRoute))

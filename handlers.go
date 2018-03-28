@@ -23,7 +23,7 @@ func FacebookHookGet(w http.ResponseWriter, r *http.Request) {
 }
 
 func FacebookHookPost(w http.ResponseWriter, r *http.Request) {
-	log.Println("got facebook hook request")
+	log.Println("get facebook hook request")
 	var changeTransport Transport
 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
 	if err != nil {
