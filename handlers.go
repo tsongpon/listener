@@ -1,15 +1,15 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"html/template"
-	"log"
-	"net/http"
 	"io"
 	"io/ioutil"
-	"encoding/json"
-	"time"
+	"log"
+	"net/http"
 	"strconv"
+	"time"
 )
 
 func FacebookHookGet(w http.ResponseWriter, r *http.Request) {
@@ -61,8 +61,8 @@ func QueryUserActivities(w http.ResponseWriter, r *http.Request) {
 		size = 5
 	}
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	activities := QueryActivities(Query{UserId:userId, Value:field, Size:size})
-	total := CountActivities(Query{UserId:userId, Value:field})
+	activities := QueryActivities(Query{UserId: userId, Value: field, Size: size})
+	total := CountActivities(Query{UserId: userId, Value: field})
 	w.WriteHeader(http.StatusOK)
 	response := UserActivities{total, len(activities), activities}
 	if err := json.NewEncoder(w).Encode(response); err != nil {

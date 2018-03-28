@@ -7,6 +7,7 @@ import (
 
 func main() {
 	log.Print("Starting application")
+
 	redPlanetRoute := RedPlanetRouter()
 	log.Print("The service is ready to listen and serve.")
 

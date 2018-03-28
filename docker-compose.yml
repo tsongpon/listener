@@ -1,0 +1,21 @@
+version: '2.1'
+services:
+  listener-db:
+      image: mongo:3.6
+      container_name: "mongodb"
+      environment:
+        - MONGO_DATA_DIR=/data/db
+        - MONGO_LOG_DIR=/dev/null
+      ports:
+        - 27017:27017
+  listener:
+      build:
+        context: .
+        dockerfile: Dockerfile
+      mem_limit: 512m
+      ports:
+        - 5000:5000
+      links:
+        - "listener-db:listener-db"
+      environment:
+        - REDPLANET_DB_HOST=listener-db

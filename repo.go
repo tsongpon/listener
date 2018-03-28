@@ -8,6 +8,7 @@ import (
 
 const DBNAME = "redPlanet"
 const COLLECTIONNAME = "userActivities"
+
 var dbHost = GetDBHost()
 
 func Save(change UserChange) {

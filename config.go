@@ -3,7 +3,7 @@ package main
 import "os"
 
 func GetDBHost() string {
-	fallback := "localhost"
+	fallback := "127.0.0.1"
 	host := os.Getenv("REDPLANET_DB_HOST")
 	if len(host) == 0 {
 		return fallback
