@@ -7,39 +7,50 @@ import (
 	"github.com/tsongpon/listener/config"
 )
 
-const DBNAME = "redPlanet"
-const COLLECTIONNAME = "userActivities"
+const collectionName = "userActivities"
+var db *mgo.Database
+var Context = DBContext{}
 
-var dbHost = config.GetDBHost()
+type DBContext struct {
+	Server   string
+	Database string
+}
 
-func Save(change UserChange) {
-	log.Println("Saving user change data")
-	session, err := mgo.Dial(dbHost)
-	if err != nil {
-		panic(err)
-	}
-	defer session.Close()
+func InitDB() {
+	log.Println("Initialing database connection")
+	Context.Server = config.GetDBHost()
+	Context.Database = config.DatabaseName
+	Context.Connect()
+}
 
-	// Switch the session to a monotonic behavior.
+func CloseDB() {
+	db.Session.Close()
+}
+
+func (ctx *DBContext) Connect() {
+	session, err := mgo.Dial(ctx.Server)
 	session.SetMode(mgo.Monotonic, true)
+	if err != nil {
+		log.Fatal(err)
+	}
+	db = session.Clone().DB(ctx.Database)
+}
 
-	c := session.DB(DBNAME).C(COLLECTIONNAME)
-	err = c.Insert(&change)
+func (ctx *DBContext) Close() {
+	db.Session.Close()
+}
+
+func (ctx *DBContext) Save(change UserChange) {
+	log.Println("Saving user change data")
+	c := db.C(collectionName)
+	err := c.Insert(&change)
 	if err != nil {
 		log.Fatal(err)
 	}
 }
 
-func CountActivities(query Query) int {
-	session, err := mgo.Dial(dbHost)
-	if err != nil {
-		panic(err)
-	}
-	defer session.Close()
-
-	// Switch the session to a monotonic behavior.
-	session.SetMode(mgo.Monotonic, true)
-	c := session.DB(DBNAME).C(COLLECTIONNAME)
+func (ctx *DBContext) CountActivities(query Query) int {
+	c := db.C(collectionName)
 
 	total, err := c.Find(composeCondition(query)).Count()
 
@@ -50,19 +61,11 @@ func CountActivities(query Query) int {
 	return total
 }
 
-func QueryActivities(query Query) []UserChange {
+func (ctx *DBContext) QueryActivities(query Query) []UserChange {
 	var result []UserChange
-	session, err := mgo.Dial(dbHost)
-	if err != nil {
-		panic(err)
-	}
-	defer session.Close()
+	c := db.C(collectionName)
 
-	// Switch the session to a monotonic behavior.
-	session.SetMode(mgo.Monotonic, true)
-	c := session.DB(DBNAME).C(COLLECTIONNAME)
-
-	err = c.Find(composeCondition(query)).Skip(query.Start).Limit(query.Size).Sort("time").All(&result)
+	err := c.Find(composeCondition(query)).Skip(query.Start).Limit(query.Size).Sort("time").All(&result)
 
 	if err != nil {
 		panic(err)

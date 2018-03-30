@@ -50,7 +50,7 @@ func FacebookHookPost(w http.ResponseWriter, r *http.Request) {
 		model.Time = time.Unix(entry.Time, 0)
 		model.Field = each.Field
 		model.Value = each.Value
-		data.Save(model)
+		data.Context.Save(model)
 	}
 	w.WriteHeader(http.StatusOK)
 }
@@ -69,8 +69,11 @@ func QueryUserActivities(w http.ResponseWriter, r *http.Request) {
 		start = 0
 	}
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	activities := data.QueryActivities(data.Query{UserId: userId, Value: field, Size: size, Start: start})
-	total := data.CountActivities(data.Query{UserId: userId, Value: field})
+	activities := data.Context.QueryActivities(data.Query{UserId: userId, Value: field, Size: size, Start: start})
+	if activities == nil {
+		activities = []data.UserChange{}
+	}
+	total := data.Context.CountActivities(data.Query{UserId: userId, Value: field})
 	w.WriteHeader(http.StatusOK)
 	response := transport.UserActivities{total, len(activities), activities}
 	if err := json.NewEncoder(w).Encode(response); err != nil {

@@ -2,6 +2,8 @@ package config
 
 import "os"
 
+const DatabaseName = "redPlanet"
+
 func GetDBHost() string {
 	fallback := "127.0.0.1"
 	host := os.Getenv("REDPLANET_DB_HOST")
