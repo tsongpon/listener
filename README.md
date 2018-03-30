@@ -20,3 +20,7 @@ run service
 ## Infrastructure
 
 ![enter image description here](https://github.com/tsongpon/listener/blob/master/diagram/infra.png?raw=true)
+
+## System Architecture
+
+![enter image description here](https://github.com/tsongpon/listener/blob/master/diagram/architecture.png?raw=true)

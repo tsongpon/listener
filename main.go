@@ -11,7 +11,7 @@ func main() {
 	log.Print("Starting application")
 	data.InitDB()
 	defer data.CloseDB()
-	redPlanetRoute := route.RedPlanetRouter()
+	redPlanetRoute := route.NewRedPlanetRouter()
 	log.Print("The service is ready to listen and serve.")
 
 	log.Fatal(http.ListenAndServe(":5000", redPlanetRoute))

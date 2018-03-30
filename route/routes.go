@@ -16,7 +16,7 @@ type Route struct {
 
 type Routes []Route
 
-func RedPlanetRouter() *mux.Router {
+func NewRedPlanetRouter() *mux.Router {
 
 	router := mux.NewRouter().StrictSlash(true)
 	for _, route := range routes {

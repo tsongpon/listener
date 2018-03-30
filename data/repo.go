@@ -9,38 +9,35 @@ import (
 
 const collectionName = "userActivities"
 var db *mgo.Database
-var Context = DBContext{}
+var Dao = UserDao{}
 
-type DBContext struct {
+type UserDao struct {
 	Server   string
 	Database string
 }
 
 func InitDB() {
 	log.Println("Initialing database connection")
-	Context.Server = config.GetDBHost()
-	Context.Database = config.DatabaseName
-	Context.Connect()
+	Dao.Server = config.GetDBHost()
+	Dao.Database = config.DatabaseName
+	Dao.connect()
 }
 
 func CloseDB() {
+	log.Println("Closing database connection")
 	db.Session.Close()
 }
 
-func (ctx *DBContext) Connect() {
-	session, err := mgo.Dial(ctx.Server)
+func (dao *UserDao) connect() {
+	session, err := mgo.Dial(dao.Server)
 	session.SetMode(mgo.Monotonic, true)
 	if err != nil {
 		log.Fatal(err)
 	}
-	db = session.Clone().DB(ctx.Database)
+	db = session.Clone().DB(dao.Database)
 }
 
-func (ctx *DBContext) Close() {
-	db.Session.Close()
-}
-
-func (ctx *DBContext) Save(change UserChange) {
+func (dao *UserDao) Save(change UserChange) {
 	log.Println("Saving user change data")
 	c := db.C(collectionName)
 	err := c.Insert(&change)
@@ -49,7 +46,7 @@ func (ctx *DBContext) Save(change UserChange) {
 	}
 }
 
-func (ctx *DBContext) CountActivities(query Query) int {
+func (dao *UserDao) CountActivities(query Query) int {
 	c := db.C(collectionName)
 
 	total, err := c.Find(composeCondition(query)).Count()
@@ -61,7 +58,7 @@ func (ctx *DBContext) CountActivities(query Query) int {
 	return total
 }
 
-func (ctx *DBContext) QueryActivities(query Query) []UserChange {
+func (dao *UserDao) QueryActivities(query Query) []UserChange {
 	var result []UserChange
 	c := db.C(collectionName)
 
