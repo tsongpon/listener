@@ -2,11 +2,18 @@ package config
 
 import "os"
 
-const DatabaseName = "redPlanet"
-
 func GetDBHost() string {
 	fallback := "127.0.0.1"
 	host := os.Getenv("REDPLANET_DB_HOST")
+	if len(host) == 0 {
+		return fallback
+	}
+	return host
+}
+
+func GetDBName() string {
+	fallback := "redPlanet"
+	host := os.Getenv("DB_NAME")
 	if len(host) == 0 {
 		return fallback
 	}

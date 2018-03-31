@@ -4,7 +4,6 @@ import (
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 	"log"
-	"github.com/tsongpon/listener/config"
 )
 
 const collectionName = "userActivities"
@@ -16,10 +15,10 @@ type UserDao struct {
 	Database string
 }
 
-func InitDB() {
+func InitDB(dbHost string, dbName string) {
 	log.Println("Initialing database connection")
-	Dao.Server = config.GetDBHost()
-	Dao.Database = config.DatabaseName
+	Dao.Server = dbHost
+	Dao.Database = dbName
 	Dao.connect()
 }
 

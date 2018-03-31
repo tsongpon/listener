@@ -5,11 +5,12 @@ import (
 	"log"
 	"net/http"
 	"github.com/tsongpon/listener/data"
+	"github.com/tsongpon/listener/config"
 )
 
 func main() {
 	log.Print("Starting application")
-	data.InitDB()
+	data.InitDB(config.GetDBHost(), config.GetDBName())
 	defer data.CloseDB()
 	redPlanetRoute := route.NewRedPlanetRouter()
 	log.Print("The service is ready to listen and serve.")

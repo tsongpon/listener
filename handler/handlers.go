@@ -20,15 +20,16 @@ func FacebookHookGet(w http.ResponseWriter, r *http.Request) {
 	if token == config.GetVerifyToken() {
 		io.WriteString(w, r.FormValue("hub.challenge"))
 	} else {
+		log.Println("token verify fail")
 		w.WriteHeader(400)
 	}
 
 }
 
 func FacebookHookPost(w http.ResponseWriter, r *http.Request) {
-	log.Println("get facebook hook request")
 	var changeTransport transport.Transport
 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
+	defer r.Body.Close()
 	if err != nil {
 		panic(err)
 	}
@@ -50,9 +51,10 @@ func FacebookHookPost(w http.ResponseWriter, r *http.Request) {
 		model.Time = time.Unix(entry.Time, 0)
 		model.Field = each.Field
 		model.Value = each.Value
+		log.Println("Create user activity log for userId: ", entry.Uid)
 		data.Dao.Save(model)
 	}
-	w.WriteHeader(http.StatusOK)
+	w.WriteHeader(http.StatusCreated)
 }
 
 func QueryUserActivities(w http.ResponseWriter, r *http.Request) {
