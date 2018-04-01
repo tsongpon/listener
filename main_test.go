@@ -337,7 +337,7 @@ func prepareDocker() {
 }
 
 func prepareEnv() {
-	log.Println("prepareing test enviroment")
+	log.Println("prepareing test environment")
 	mongoContainerIdFromHost := getMongoContainerId()
 	if mongoContainerIdFromHost == "" {
 		log.Println("pulling mongo docker image(if missing)")
