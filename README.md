@@ -1,4 +1,6 @@
 # Listener
+[![Go Report Card](https://goreportcard.com/badge/github.com/tsongpon/listener)](https://goreportcard.com/report/github.com/tsongpon/listener)
+
  Listen for facebook user's activities and save to database
 
  **subscribed user's event** : Only basic information, first name, last name, profile picture, gender and age range.
