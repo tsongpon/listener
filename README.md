@@ -24,7 +24,7 @@ required environment variable
     
 run service (native)
 
-    go dep ensure
+    dep ensure
     go build -o bin/listener .
     ./bin/listener
 
