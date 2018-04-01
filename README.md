@@ -40,8 +40,9 @@ service will be running on port `5000`
 **get user activities**
 
     GET http://localhost:5000/useractivities
-query parameter supported:
-	- `userid` : filter by userId
-	- `field` : filter by update's field
-	- `size` : limit response size, default value is 5
-	- `start` : specify start offset of response (response order by time) 
+    
+query parameter supported:  
+	- `userid` : filter by userId   
+	- `field` : filter by update's field    
+	- `size` : limit response size, default value is 5  
+	- `start` : specify start offset of response (response order by time)   
