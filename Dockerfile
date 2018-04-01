@@ -1,16 +1,16 @@
-# pulling a lightweight version of golang
-FROM golang:1.10-alpine
+FROM golang:1.10.1
 MAINTAINER Songpon Imyen <t.songpon@gmail.com>
+
 RUN apk --update add --no-cache git
 
-# Copy the local package files to the container's workspace.
-ADD . /go/src/listener
-WORKDIR /go/src/listener
+ADD . /go/src/github.com/tsongpon/listener
+WORKDIR /go/src/github.com/tsongpon/listener
 
-RUN go get listener
+RUN go get -u github.com/Masterminds/glide
 
-# Run the command by default when the container starts.
-ENTRYPOINT ["/go/bin/listener"]
+RUN glide install
+RUN go install
 
-# Document that the service listens on port 9000.
 EXPOSE 5000
+
+ENTRYPOINT /go/bin/listener
