@@ -1,16 +1,14 @@
-FROM golang:1.10.1
-MAINTAINER Songpon Imyen <t.songpon@gmail.com>
-
-RUN apk --update add --no-cache git
+FROM golang
 
 ADD . /go/src/github.com/tsongpon/listener
-WORKDIR /go/src/github.com/tsongpon/listener
 
 RUN go get -u github.com/Masterminds/glide
+WORKDIR /go/src/github.com/tsongpon/listener
 
 RUN glide install
 RUN go install
 
-EXPOSE 5000
+ENV GO_ENV_PORT=5000
+EXPOSE $GO_ENV_PORT
 
 ENTRYPOINT /go/bin/listener
