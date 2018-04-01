@@ -1,11 +1,11 @@
 package main
 
 import (
+	"github.com/tsongpon/listener/config"
+	"github.com/tsongpon/listener/data"
 	"github.com/tsongpon/listener/route"
 	"log"
 	"net/http"
-	"github.com/tsongpon/listener/data"
-	"github.com/tsongpon/listener/config"
 )
 
 func main() {

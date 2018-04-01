@@ -7,6 +7,7 @@ import (
 )
 
 const collectionName = "userActivities"
+
 var db *mgo.Database
 var Dao = UserDao{}
 
@@ -47,26 +48,20 @@ func (dao *UserDao) Save(change UserChange) {
 
 func (dao *UserDao) CountActivities(query Query) int {
 	c := db.C(collectionName)
-
 	total, err := c.Find(composeCondition(query)).Count()
-
 	if err != nil {
 		panic(err)
 	}
-
 	return total
 }
 
 func (dao *UserDao) QueryActivities(query Query) []UserChange {
 	var result []UserChange
 	c := db.C(collectionName)
-
-	err := c.Find(composeCondition(query)).Skip(query.Start).Limit(query.Size).Sort("time").All(&result)
-
+	err := c.Find(composeCondition(query)).Skip(query.Start).Limit(query.Size).Sort("-time").All(&result)
 	if err != nil {
 		panic(err)
 	}
-
 	return result
 }
 
@@ -82,6 +77,5 @@ func composeCondition(query Query) bson.M {
 	if len(filter) > 0 {
 		condition = bson.M{"$or": filter}
 	}
-
 	return condition
 }

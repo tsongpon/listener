@@ -29,7 +29,6 @@ func FacebookHookGet(w http.ResponseWriter, r *http.Request) {
 func FacebookHookPost(w http.ResponseWriter, r *http.Request) {
 	var changeTransport transport.Transport
 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
-	defer r.Body.Close()
 	if err != nil {
 		panic(err)
 	}
@@ -77,7 +76,7 @@ func QueryUserActivities(w http.ResponseWriter, r *http.Request) {
 	}
 	total := data.Dao.CountActivities(data.Query{UserId: userId, Value: field})
 	w.WriteHeader(http.StatusOK)
-	response := transport.UserActivities{total, len(activities), activities}
+	response := transport.UserActivities{Total: total, Size: len(activities), Data: activities}
 	if err := json.NewEncoder(w).Encode(response); err != nil {
 		panic(err)
 	}
