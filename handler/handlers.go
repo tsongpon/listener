@@ -53,7 +53,7 @@ func FacebookHookPost(w http.ResponseWriter, r *http.Request) {
 		log.Println("Create user activity log for userId: ", entry.Uid)
 		data.Dao.Save(model)
 	}
-	w.WriteHeader(http.StatusCreated)
+	w.WriteHeader(http.StatusOK)
 }
 
 func QueryUserActivities(w http.ResponseWriter, r *http.Request) {

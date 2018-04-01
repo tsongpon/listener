@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Facebook Login JavaScript Example</title>
+    <title>We need your data!!</title>
     <meta charset="UTF-8">
 </head>
 <body>
@@ -81,7 +81,7 @@
         FB.api('/me', function(response) {
             console.log('Successful login for: ' + response.name);
             document.getElementById('status').innerHTML =
-                    'Thanks for logging in, ' + response.name + '!';
+                    'I got you!!, ' + response.name + '!';
         });
     }
 </script>
@@ -92,7 +92,10 @@
   the FB.login() function when clicked.
 -->
 
-<fb:login-button data-scope="public_profile,user_about_me,user_birthday,user_website" onlogin="checkLoginState();">
+
+<fb:login-button
+        scope="public_profile,email"
+        onlogin="checkLoginState();">
 </fb:login-button>
 
 <div id="status">

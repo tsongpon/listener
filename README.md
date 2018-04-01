@@ -1,9 +1,7 @@
 # Listener
  Listen for facebook user's activities and save to database
 
- **subscribed user's event** : about, birthday, email, first_name, gender, last_name, local,
- pic_big_https, pic_big_with_logo, pic_https, pic_small_https, pic_small_with_logo,
- pic_square_https, pic_square_with_logo, pic_with_logo, quote, religion, website
+ **subscribed user's event** : Only basic information, first name, last name, profile picture, gender and age range.
  
 ## Project dependencies
 - Go - programming language

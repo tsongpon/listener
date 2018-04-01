@@ -12,6 +12,7 @@ import (
 	"github.com/fsouza/go-dockerclient"
 	"github.com/tsongpon/listener/transport"
 	"log"
+	"time"
 )
 
 const integrationMongoContainerName = "rp_integrationTest_mongo"
@@ -86,7 +87,27 @@ func TestGetActivities(t *testing.T) {
 	json.Unmarshal([]byte(resp.String()), &responseTransport)
 }
 
-func TestPostUserUpdateAndQuery(t *testing.T) {
+func TestGetActivitiesWithNotExistUser(t *testing.T) {
+	notExistUserId := time.Now().Nanosecond()
+	resp, err := resty.R().Get(baseUrl + "/useractivities?" + string(notExistUserId))
+
+	if err != nil {
+		t.Error(err)
+	}
+
+	if resp.StatusCode() != 200 {
+		t.Errorf("Success expected: %d", resp.StatusCode())
+	}
+
+	responseTransport := new(transport.UserActivities)
+	json.Unmarshal([]byte(resp.String()), &responseTransport)
+
+	if responseTransport.Total != 0 || responseTransport.Size != 0 {
+		t.Error("Not exist useractivities should return empty response")
+	}
+}
+
+func TestPostUserUpdate(t *testing.T) {
 	jsonPayload := `{
 					"entry": [
 						{
@@ -104,12 +125,40 @@ func TestPostUserUpdateAndQuery(t *testing.T) {
 					  "object": "user"
  					}`
 
+	res, _ := resty.R().
+		SetHeader("Content-Type", "application/json").
+		SetBody(jsonPayload).
+		Post(baseUrl + "/facebookhook")
+
+	if res.StatusCode() != 200 {
+		t.Error("Post webhook with valid payload should return status 200")
+	}
+}
+
+func TestPostUserUpdateAndQuery(t *testing.T) {
+	jsonPayload := `{
+					"entry": [
+						{
+						  "time": 1521910231,
+						  "changes": [
+							{
+							  "field": "pic_square_with_logo",
+							  "value": "http://somepic/io"
+							}
+						  ],
+						  "id": "TestPostUserUpdateAndQuery",
+						  "uid": "TestPostUserUpdateAndQuery"
+						}
+					  ],
+					  "object": "user"
+ 					}`
+
 	resty.R().
 		SetHeader("Content-Type", "application/json").
 		SetBody(jsonPayload).
 		Post(baseUrl + "/facebookhook")
 
-	getResponse, getErr := resty.R().Get(baseUrl + "/useractivities?userid=TestPostUserUpdate")
+	getResponse, getErr := resty.R().Get(baseUrl + "/useractivities?userid=TestPostUserUpdateAndQuery")
 
 	if getErr != nil {
 		panic(getErr)
@@ -122,7 +171,7 @@ func TestPostUserUpdateAndQuery(t *testing.T) {
 		t.Error("Response should contain 1 item")
 	}
 
-	if responseTransport.Data[0].UserId != "TestPostUserUpdate" {
+	if responseTransport.Data[0].UserId != "TestPostUserUpdateAndQuery" {
 		t.Error("Response has wrong userId")
 	}
 
