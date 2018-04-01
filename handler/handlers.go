@@ -70,6 +70,7 @@ func QueryUserActivities(w http.ResponseWriter, r *http.Request) {
 		start = 0
 	}
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.Header().Set("Cache-Control", "no-cache")
 	activities := data.Dao.QueryActivities(data.Query{UserId: userId, Value: field, Size: size, Start: start})
 	if activities == nil {
 		activities = []data.UserChange{}
